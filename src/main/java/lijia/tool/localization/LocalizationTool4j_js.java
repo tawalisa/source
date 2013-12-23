@@ -14,10 +14,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
-
+/**
+ * a tool to handle locatization Chinese in js
+ * if you run this tool, it will pop a message windows when it parses Chinese. 
+ * You need type it specific key or nothing to do(it will be used default key.)
+ * @version 1.0
+ * @author lijia (tawalisa@163.com)
+ *
+ */
 public class LocalizationTool4j_js {
 	final static String prefix="js_sen_js";
 	final static String resource="com.founder.enp.sendic.WebMessage";
