@@ -85,14 +85,14 @@ public class Dijkstra {
 		}
 	}
 
-	public List<Vertex> getShortestPathTo(Vertex target) {
-		List<Vertex> path = new ArrayList<Vertex>();
+	public List<String> getShortestPathTo(Vertex target) {
+		List<String> path = new ArrayList<String>();
 		for (Vertex vertex = target; vertex != null; vertex = vertex.previous)
-			path.add(vertex);
+			path.add(vertex.name);
 		Collections.reverse(path);
 		return path;
 	}
-
+	
 	public static void main(String[] args) {
 		Vertex v0 = new Vertex("北京");
 		Vertex v1 = new Vertex("沈阳");
@@ -118,7 +118,7 @@ public class Dijkstra {
 		di.computePaths(v1);
 		for (Vertex v : vertices) {
 			System.out.println("Distance to " + v + ": " + v.minDistance);
-			List<Vertex> path = di.getShortestPathTo(v);
+			List<String> path = di.getShortestPathTo(v);
 			System.out.println("Path: " + path);
 		}
 	}

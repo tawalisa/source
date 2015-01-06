@@ -49,11 +49,7 @@ public class SubWay {
 		
 		
 	}
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		
+	public static SubWayResult getleastPath(String sourcename, String tergatname){
 		Map<String, Vertex> stationMap = new HashMap<String, Vertex>();
 		for(String[] stations:all.values()){
 			for(String stationName: stations){
@@ -79,44 +75,85 @@ public class SubWay {
 			tVertex.adjacencies.add(new Edge(sVertex, weight));
 		}
 		
-		Vertex source = stationMap.get("回龙观东大街"); 
-		Vertex tergat = stationMap.get("农业展览馆"); 
+		Vertex source = stationMap.get(sourcename); 
+		Vertex tergat = stationMap.get(tergatname); 
 		Dijkstra di = new Dijkstra();
 		di.computePaths(source);
-		List<Vertex> path = di.getShortestPathTo(tergat);
+		List<String> path = di.getShortestPathTo(tergat);
 		System.out.println("Path: " + path);
 		System.out.println("Distance to : " + tergat.minDistance);
-		stationMap.clear();
-		for(String[] stations:all.values()){
-			for(String stationName: stations){
-				addVertexToMap(stationName,stationMap);
-			}
-		}
-		for(String[] strings:edges){
-			String source1 = strings[0];
-			String target1 = strings[1];
-			double weight = Double.parseDouble(strings[2]);
-			Vertex sVertex = stationMap.get(source1);
-			Vertex tVertex = stationMap.get(target1);
-			if(tVertex== null){
-				System.out.println(strings);
-				System.out.println(source1);
-				System.out.println(target1);
-				System.out.println(weight);
-			}
-			if("T3航站楼".equals(target1) || "T2航站楼".equals(target1)){
-				continue;
-			}
-			sVertex.adjacencies.add(new Edge(tVertex, weight));
-			tVertex.adjacencies.add(new Edge(sVertex, weight));
-		}
-		source = stationMap.get("四惠"); 
-		tergat = stationMap.get("霍营"); 
-		di = new Dijkstra();
-		di.computePaths(source);
-		path = di.getShortestPathTo(tergat);
-		System.out.println("Path: " + path);
-		System.out.println("Distance to : " + tergat.minDistance);
+		
+		return new SubWayResult(path,tergat.minDistance);
+	}
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		SubWayResult re = getleastPath("四惠","霍营");
+		getleastPath("回龙观东大街","农业展览馆");
+//		Map<String, Vertex> stationMap = new HashMap<String, Vertex>();
+//		for(String[] stations:all.values()){
+//			for(String stationName: stations){
+//				addVertexToMap(stationName,stationMap);
+//			}
+//		}
+//		for(String[] strings:edges){
+//			String source = strings[0];
+//			String target = strings[1];
+//			double weight = Double.parseDouble(strings[2]);
+//			Vertex sVertex = stationMap.get(source);
+//			Vertex tVertex = stationMap.get(target);
+//			if(tVertex== null){
+//				System.out.println(strings);
+//				System.out.println(source);
+//				System.out.println(target);
+//				System.out.println(weight);
+//			}
+//			if("T3航站楼".equals(target) || "T2航站楼".equals(target)){
+//				continue;
+//			}
+//			sVertex.adjacencies.add(new Edge(tVertex, weight));
+//			tVertex.adjacencies.add(new Edge(sVertex, weight));
+//		}
+//		
+//		Vertex source = stationMap.get("回龙观东大街"); 
+//		Vertex tergat = stationMap.get("农业展览馆"); 
+//		Dijkstra di = new Dijkstra();
+//		di.computePaths(source);
+//		List<Vertex> path = di.getShortestPathTo(tergat);
+//		System.out.println("Path: " + path);
+//		System.out.println("Distance to : " + tergat.minDistance);
+//		stationMap.clear();
+//		for(String[] stations:all.values()){
+//			for(String stationName: stations){
+//				addVertexToMap(stationName,stationMap);
+//			}
+//		}
+//		for(String[] strings:edges){
+//			String source1 = strings[0];
+//			String target1 = strings[1];
+//			double weight = Double.parseDouble(strings[2]);
+//			Vertex sVertex = stationMap.get(source1);
+//			Vertex tVertex = stationMap.get(target1);
+//			if(tVertex== null){
+//				System.out.println(strings);
+//				System.out.println(source1);
+//				System.out.println(target1);
+//				System.out.println(weight);
+//			}
+//			if("T3航站楼".equals(target1) || "T2航站楼".equals(target1)){
+//				continue;
+//			}
+//			sVertex.adjacencies.add(new Edge(tVertex, weight));
+//			tVertex.adjacencies.add(new Edge(sVertex, weight));
+//		}
+//		source = stationMap.get("四惠"); 
+//		tergat = stationMap.get("霍营"); 
+//		di = new Dijkstra();
+//		di.computePaths(source);
+//		path = di.getShortestPathTo(tergat);
+//		System.out.println("Path: " + path);
+//		System.out.println("Distance to : " + tergat.minDistance);
 	}
 	private static void addVertexToMap(String key,
 			Map<String, Vertex> map) {
