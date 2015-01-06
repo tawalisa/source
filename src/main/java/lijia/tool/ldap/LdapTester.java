@@ -2,77 +2,18 @@ package lijia.tool.ldap;
 
 
 
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.directory.api.ldap.model.entry.DefaultEntry;
 import org.apache.directory.api.ldap.model.entry.Entry;
-import org.apache.directory.api.ldap.model.exception.LdapException;
-import org.apache.directory.api.ldap.model.message.AddRequest;
-import org.apache.directory.api.ldap.model.message.AddRequestImpl;
-import org.apache.directory.api.ldap.model.message.AddResponse;
 import org.apache.directory.api.ldap.model.message.ModifyRequest;
 import org.apache.directory.api.ldap.model.message.ModifyRequestImpl;
-import org.apache.directory.api.ldap.model.message.ModifyResponse;
-import org.apache.directory.api.ldap.model.message.controls.ManageDsaITImpl;
 import org.apache.directory.api.ldap.model.name.Dn;
-import org.apache.directory.ldap.client.api.LdapNetworkConnection;
-import org.apache.directory.ldap.client.api.future.AddFuture;
-import org.apache.directory.ldap.client.api.future.ModifyFuture;
 
-public class LdapTester extends Tester {
+public class LdapTester extends LdapTesterBase {
 	
 	public LdapTester(int count, int mintime, int threadnum) {
 		super(count, mintime, threadnum);
 	}
-
-
-
-	private LdapNetworkConnection conn;
-	
-
-
-
-	@Override
-	protected void afterTest() {
-		clear();
-	}
-
-
-
-	private void clear() {
-		if(conn!=null){
-			try {
-				conn.unBind();
-			} catch (Exception e) {
-			}
-			try {
-				conn.close();
-			} catch (Exception e) {
-			}
-		}
-	}
-
-
-
-	@Override
-	protected void exceptionTest(Exception e1) {
-		super.exceptionTest(e1);
-		clear();
-	}
-
-
-
-	@Override
-	protected void beforeTest() throws Exception {
-		conn = new LdapNetworkConnection(
-				"sdmbeijingtest15.chn.hp.com", 5005);
-		conn.bind("cn=root", "secret");
-		conn.setTimeOut( 0 );
-	}
-
-
 
 	@Override
 	public void dotest(int i, Object... objects) throws Exception {
@@ -101,7 +42,7 @@ public class LdapTester extends Tester {
 		addEntry(entry);
 		
 		// add deviceInfo [deviceAttrName=channelMap,deviceId=M10527TCH818,o=devices,o=shawEnterprise
-		String[] attrs = new String[]{"channelMap","converterType","node","shawModel","locationId","mode","encoding","modulation","dctName","dac"};
+		String[] attrs = {"channelMap","converterType","node","shawModel","locationId","mode","encoding","modulation","dctName","dac"};
 		for(String attr:attrs){
 			entry = new DefaultEntry("deviceAttrName="+attr+",deviceId="+accountID+",o=devices,o=shawEnterprise"
 					, "objectclass","deviceInfo" 
@@ -181,39 +122,5 @@ public class LdapTester extends Tester {
 	}
 
 
-
-	private void modifyEntry(ModifyRequest modRequest) throws LdapException,
-			InterruptedException, ExecutionException, TimeoutException {
-		long c = System.currentTimeMillis();
-		try {
-			
-			ModifyFuture modifyFuture = conn.modifyAsync(modRequest );
-			ModifyResponse response = modifyFuture.get(600, TimeUnit.SECONDS);
-			System.out.printf("%s-%s  %s : modify : %s : %d %s\n",System.currentTimeMillis(),this.getThreadnum(),modRequest.getName(),(System.currentTimeMillis()-c),response.getLdapResult().getResultCode().getResultCode(),response.getLdapResult().getResultCode());
-		}  catch (TimeoutException e) {
-			System.out.printf("%s-%s  %s : modify : %s : timeout\n",System.currentTimeMillis(),this.getThreadnum(),modRequest.getName(),(System.currentTimeMillis()-c));
-		}
-		
-	}
-
-
-
-
-
-	private void addEntry(Entry entry) throws Exception {
-		long c = System.currentTimeMillis();
-		AddRequest addRequest = new AddRequestImpl();
-		addRequest.setEntry(entry);
-		addRequest.addControl(new ManageDsaITImpl());
-		 AddFuture addFuture = conn.addAsync(addRequest);
-		 AddResponse response;
-		try {
-			response = addFuture.get(600, TimeUnit.SECONDS);
-			System.out.printf("%s-%s  %s : add : %s : %d %s\n",System.currentTimeMillis(),this.getThreadnum(),entry.getDn(),(System.currentTimeMillis()-c),response.getLdapResult().getResultCode().getResultCode(),response.getLdapResult().getResultCode());
-		}  catch (TimeoutException e) {
-			System.out.printf("%s-%s  %s : add : %s : timeout\n",System.currentTimeMillis(),this.getThreadnum(),entry.getDn(),(System.currentTimeMillis()-c));
-		}
-		
-	}
 
 }

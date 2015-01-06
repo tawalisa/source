@@ -52,9 +52,9 @@ public abstract class Tester implements Runnable {
 				dotest(i);
 
 				long spenttime = System.currentTimeMillis() - c;
-				if (spenttime > mintime) {
+				if ( mintime> spenttime) {
 					try {
-						TimeUnit.MILLISECONDS.sleep(spenttime);
+						TimeUnit.MILLISECONDS.sleep(mintime-spenttime);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
